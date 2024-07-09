@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>reCAPTCHA Enterprise</title>
+  <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
+</head>
+<body>
+  <form id="myForm">
+    <!-- Your form fields go here -->
+    <button type="submit" class="g-recaptcha"
+            data-sitekey="6LewDfwpAAAAALzKidAJ_z4FeNKCgzKJGerAMwyW"
+            data-callback='onSubmit'
+            data-action='submit'>Submit</button>
+  </form>
+  <script>
+    function onSubmit(token) {
+      // Send the token to your backend
+      fetch('/verify-recaptcha', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ token })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('myForm').submit();
+        } else {
+          alert('reCAPTCHA verification failed. Please try again.');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
